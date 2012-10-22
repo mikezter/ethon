@@ -78,6 +78,11 @@ describe Ethon::Easy::Options do
         easy.set_options
       end
 
+      it "removes the dirty flag" do
+        easy.url = url
+        expect{ easy.set_options }.to change{ easy.dirty? }.from(true).to(false)
+      end
+
       context "when options contains a null byte" do
         let(:url) { "http://localhost:3001/\0" }
 

@@ -28,7 +28,14 @@ module Ethon
         private
 
         def define_writers
-          available_options.each{ |o| attr_writer o }
+          available_options.each do |o|
+            class_eval <<-RB
+              def #{o}= param
+                @#{o} = param
+                @dirty = true
+              end
+            RB
+          end
         end
 
         public
@@ -98,6 +105,7 @@ module Ethon
         self.class.available_options.each do |option|
           Curl.set_option(option, value_for(option), handle)
         end
+        @dirty = false
       end
 
       # Return the value to set to easy handle. It is converted with the help
