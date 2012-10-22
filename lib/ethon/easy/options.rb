@@ -7,21 +7,31 @@ module Ethon
 
       # :nodoc:
       def self.included(base)
-        base.extend ClassMethods
-        base.const_set(:AVAILABLE_OPTIONS, [
-          :dns_cache_timeout, :httppost, :httpget, :nobody, :upload,
-          :customrequest, :cainfo, :capath, :connecttimeout, :connecttimeout_ms,
-          :forbid_reuse, :followlocation, :httpauth, :infilesize, :interface,
-          :maxredirs, :nosignal, :postfieldsize, :copypostfields, :proxy,
-          :proxyauth, :proxyport, :proxytype, :proxyuserpwd, :timeout, :timeout_ms,
-          :readdata, :sslcert, :ssl_verifypeer, :ssl_verifyhost, :sslcerttype,
-          :sslkey, :sslkeytype, :sslversion, :url, :useragent, :userpwd,
-          :verbose, :readfunction
-        ])
-        base.send(:attr_accessor, *Ethon::Easy::AVAILABLE_OPTIONS)
+        base.class_eval do
+          extend ClassMethods
+          const_set(:AVAILABLE_OPTIONS, [
+            :dns_cache_timeout, :httppost, :httpget, :nobody, :upload,
+            :customrequest, :cainfo, :capath, :connecttimeout, :connecttimeout_ms,
+            :forbid_reuse, :followlocation, :httpauth, :infilesize, :interface,
+            :maxredirs, :nosignal, :postfieldsize, :copypostfields, :proxy,
+            :proxyauth, :proxyport, :proxytype, :proxyuserpwd, :timeout, :timeout_ms,
+            :readdata, :sslcert, :ssl_verifypeer, :ssl_verifyhost, :sslcerttype,
+            :sslkey, :sslkeytype, :sslversion, :url, :useragent, :userpwd,
+            :verbose, :readfunction
+          ])
+          attr_reader(*Ethon::Easy::AVAILABLE_OPTIONS)
+          define_writers
+        end
       end
 
       module ClassMethods # :nodoc:
+        private
+
+        def define_writers
+          available_options.each{ |o| attr_writer o }
+        end
+
+        public
 
         # Return the available options.
         #
@@ -68,6 +78,16 @@ module Ethon
             :postfieldsize, :proxyport, :ssl_verifyhost, :timeout, :timeout_ms
           ]
         end
+
+
+      end
+
+      # Does the handle need a prepare?
+      #
+      # @example Needs prepare.
+      #   easy.dirty?
+      def dirty?
+        @dirty || false
       end
 
       # Set specified options on easy handle.

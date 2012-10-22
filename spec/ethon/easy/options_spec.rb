@@ -15,11 +15,13 @@ describe Ethon::Easy::Options do
     end
 
     context "write accessors" do
-      it "is present" do
+
+      it "are defined" do
         expect(options.all? { |o| easy.respond_to?("#{o}=") }).to be_true
       end
-      it "is flagged as dirty" do
-        expect{ easy.maxconnects = 3 }.to change{ easy.dirty? }.from(false).to(true)
+
+      it "flag the instance as dirty" do
+        expect{ easy.timeout = 3 }.to change{ easy.dirty? }.from(false).to(true)
       end
     end
 
