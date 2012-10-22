@@ -3,6 +3,13 @@ require 'spec_helper'
 describe Ethon::Easy::Header do
   let(:easy) { Ethon::Easy.new }
 
+  describe "#headers=" do
+    it "flags the instance as dirty" do
+      easy.headers = { 'User-Agent' => 'Ethon' }
+      easy.dirty?.should be true
+    end
+  end
+
   describe "#set_headers" do
     let(:headers) { { 'User-Agent' => 'Ethon' } }
     before { easy.headers = headers }

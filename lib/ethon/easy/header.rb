@@ -22,6 +22,7 @@ module Ethon
       # @param [ Hash ] headers The headers.
       def headers=(headers)
         @headers = headers
+        @dirty = true
       end
 
       # Return header_list.
