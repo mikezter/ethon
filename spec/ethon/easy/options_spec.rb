@@ -14,8 +14,13 @@ describe Ethon::Easy::Options do
       expect(options.all? { |o| easy.respond_to?(o) }).to be_true
     end
 
-    it "have write accessors" do
-      expect(options.all? { |o| easy.respond_to?("#{o}=") }).to be_true
+    context "write accessors" do
+      it "is present" do
+        expect(options.all? { |o| easy.respond_to?("#{o}=") }).to be_true
+      end
+      it "is flagged as dirty" do
+        expect{ easy.maxconnects = 3 }.to change{ easy.dirty? }.from(false).to(true)
+      end
     end
 
     context "when option in bool_options" do
