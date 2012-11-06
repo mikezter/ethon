@@ -17,16 +17,13 @@ module Ethon
 
     # :nodoc:
     class FDSet < ::FFI::Struct
-      # XXX how does this work on non-windows? how can curl know the new size...
-      FD_SETSIZE = 524288 # set a higher maximum number of fds. this has never applied to windows, so just use the default there
-
       if Curl.windows?
         layout :fd_count, :u_int,
                :fd_array, [:u_int, 64] # 2048 FDs
 
         def clear; self[:fd_count] = 0; end
       else
-        layout :fds_bits, [:long, FD_SETSIZE / ::FFI::Type::LONG.size]
+        layout :fds_bits, :long
 
         # :nodoc:
         def clear; super; end
